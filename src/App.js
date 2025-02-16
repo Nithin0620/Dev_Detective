@@ -12,6 +12,9 @@ function App() {
   const [details, setDetails] = useState({});
   const [loading, setLoading] = useState(false);  
   const [darkmode, setIsdarkmode] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  console.log(details);
+
 
 
   async function getUserdata(user){
@@ -20,6 +23,7 @@ function App() {
       const response= await fetch(url+user);
       const data= await response.json();
       setDetails(data);
+      foundHandler();
     }
     catch(e){
       console.warn(e);
@@ -30,14 +34,20 @@ function App() {
     getUserdata(user);
   }
 
+  function foundHandler(){
+    if(details.message==="Not Found"){
+       setShowMessage(true);
+    }
+ }
+
   useEffect(() => {
     getUserdata(user);
   }, []);
 
   return (
-    <div className="App">
+    <div className="flex justify-start items-center flex-col bg-[#f6f8ff] height-screen h-[670px] ">
       <Topbar isdarkmode={darkmode} setIsdarkmode={setIsdarkmode}/>
-      <Searchbar user={user} setUser={setUser} searchBtn={searchBtn}/>
+      <Searchbar user={user} setUser={setUser} searchBtn={searchBtn} showMessage={showMessage} setShowMessage={setShowMessage}/>
       {
         loading ? (<Spinner />):(<Details details={details}/>)
       }
